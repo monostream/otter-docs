@@ -10,26 +10,32 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
-	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/gofiber/fiber/v2"
+	"github.com/kelseyhightower/envconfig"
 )
+
+type GitConfig struct {
+	URL    string `envconfig:"GIT_URL" required:"true"`
+	Branch string `envconfig:"GIT_BRANCH" default:"main"`
+}
 
 const configPath = "./dist/environment.json"
 const gitPath = "./docs/guide/"
-const gitRepository = "https://github.com/monostream/2pack-docs.git"
-const gitUser = "cblaettl"
-const gitAccessToken = "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"
-const gitRemote = "origin"
-const gitBranch = "main"
 
 func main() {
+	var cfg GitConfig
+
+	if err := envconfig.Process("", &cfg); err != nil {
+		panic(err)
+	}
+
 	app := fiber.New()
 
 	app.Use(NewHelmet())
 
 	app.Static("/", "./dist")
 
-	repo, err := pullContent()
+	repo, err := pullContent(cfg)
 
 	if err != nil {
 		panic(err)
@@ -73,12 +79,7 @@ func main() {
 				panic(err)
 			}
 
-			err = worktree.Pull(&git.PullOptions{
-				Auth: &http.BasicAuth{
-					Username: gitUser,
-					Password: gitAccessToken,
-				},
-			})
+			err = worktree.Pull(&git.PullOptions{})
 
 			if err != nil {
 				panic(err)
@@ -99,19 +100,14 @@ func main() {
 	select {}
 }
 
-func pullContent() (*git.Repository, error) {
+func pullContent(cfg GitConfig) (*git.Repository, error) {
 	if err := os.RemoveAll(gitPath); err != nil {
 		return nil, err
 	}
 
 	repo, err := git.PlainClone(gitPath, false, &git.CloneOptions{
-		URL:           gitRepository,
-		ReferenceName: plumbing.NewBranchReferenceName(gitBranch),
-		RemoteName:    gitRemote,
-		Auth: &http.BasicAuth{
-			Username: gitUser,
-			Password: gitAccessToken,
-		},
+		URL:           cfg.URL,
+		ReferenceName: plumbing.NewBranchReferenceName(cfg.Branch),
 	})
 
 	if err != nil {
@@ -122,12 +118,7 @@ func pullContent() (*git.Repository, error) {
 }
 
 func hasNewCommits(repo *git.Repository) (bool, error) {
-	err := repo.Fetch(&git.FetchOptions{
-		Auth: &http.BasicAuth{
-			Username: gitUser,
-			Password: gitAccessToken,
-		},
-	})
+	err := repo.Fetch(&git.FetchOptions{})
 
 	if err != nil {
 		if err == git.NoErrAlreadyUpToDate {

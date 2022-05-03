@@ -1,0 +1,8 @@
+apiVersion: v2
+type: application
+
+name: otter-docs
+description: otter docs
+
+version: 0.1.0
+appVersion: latest
