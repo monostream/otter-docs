@@ -10,13 +10,8 @@ out
 node_modules
 ./**/node_modules
 
-cypress
-./**/cypress
-
 dist
 ./**/dist
 
 e2e
 ./**/e2e
-
-/data
