@@ -1,190 +1,105 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"os"
-	"os/exec"
+	"log"
+	"otter-docs/internal/docs"
+	"otter-docs/internal/git"
 	"time"
 
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/gofiber/fiber/v2"
 	"github.com/kelseyhightower/envconfig"
 )
 
-type GitConfig struct {
+type Config struct {
 	URL    string `envconfig:"GIT_URL" required:"true"`
 	Branch string `envconfig:"GIT_BRANCH" default:"main"`
+
+	Port string `envconfig:"PORT" default:"8080"`
 }
 
 const configPath = "./dist/environment.json"
-const gitPath = "./docs/guide/"
 
 func main() {
-	var cfg GitConfig
+	var cfg Config
 
 	if err := envconfig.Process("", &cfg); err != nil {
 		panic(err)
 	}
 
-	app := fiber.New()
-
-	app.Static("/", "./dist")
-
-	repo, err := pullContent(cfg)
+	git, err := git.New("./vuepress/guide/", cfg.URL, cfg.Branch)
 
 	if err != nil {
 		panic(err)
 	}
 
-	if err := install(); err != nil {
+	docs, err := docs.New()
+
+	if err != nil {
 		panic(err)
 	}
 
-	if err := build(); err != nil {
-		panic(err)
-	}
-
-	if err := setupEnvironment(); err != nil {
-		panic(err)
-	}
+	var updateError error
 
 	go func() {
 		for {
 			time.Sleep(10 * time.Second)
 
-			newCommits, err := hasNewCommits(repo)
+			updateError := update(git, docs)
 
-			if err != nil {
-				fmt.Printf("Failed to check for new commits: %s", err)
-
-				continue
-			}
-
-			if !newCommits {
-				fmt.Println("Repository has no new commits")
+			if updateError != nil {
+				log.Printf("failed to update docs: %s", updateError)
 
 				continue
-			}
-
-			fmt.Println("Repository has new commits")
-
-			worktree, err := repo.Worktree()
-
-			if err != nil {
-				panic(err)
-			}
-
-			err = worktree.Pull(&git.PullOptions{})
-
-			if err != nil {
-				panic(err)
-			}
-
-			if err := build(); err != nil {
-				panic(err)
-			}
-
-			if err := setupEnvironment(); err != nil {
-				panic(err)
 			}
 		}
 	}()
 
-	app.Listen(":8080")
+	app := fiber.New()
 
-	select {}
-}
-
-func pullContent(cfg GitConfig) (*git.Repository, error) {
-	if err := os.RemoveAll(gitPath); err != nil {
-		return nil, err
-	}
-
-	repo, err := git.PlainClone(gitPath, false, &git.CloneOptions{
-		URL:           cfg.URL,
-		ReferenceName: plumbing.NewBranchReferenceName(cfg.Branch),
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return repo, nil
-}
-
-func hasNewCommits(repo *git.Repository) (bool, error) {
-	err := repo.Fetch(&git.FetchOptions{})
-
-	if err != nil {
-		if err == git.NoErrAlreadyUpToDate {
-			return false, nil
+	app.Use(func(ctx *fiber.Ctx) error {
+		if updateError != nil {
+			return ctx.SendString(fmt.Sprintf("Failed to update docs: %s", updateError))
 		}
 
-		return false, err
-	}
+		return ctx.Next()
+	})
 
-	return true, nil
+	app.Static("/", "./dist")
+
+	app.Listen(":8080")
 }
 
-func install() error {
-	args := []string{"install"}
+func update(git *git.Git, docs *docs.Docs) error {
+	shouldBuild := false
 
-	cmd := exec.Command("npm", args...)
+	if !git.IsCloned() {
+		if err := git.Clone(); err != nil {
+			return err
+		}
 
-	out, err := cmd.CombinedOutput()
-
-	if err != nil {
-		return fmt.Errorf("Failed to install: %s %w", out, err)
+		shouldBuild = true
 	}
 
-	fmt.Printf("Install output: %s", string(out))
+	if !shouldBuild {
+		hasNewCommits, err := git.HasNewCommits()
 
-	return nil
-}
+		if err != nil {
+			return err
+		}
 
-func build() error {
-	args := []string{"run", "build"}
-
-	cmd := exec.Command("npm", args...)
-
-	out, err := cmd.CombinedOutput()
-
-	if err != nil {
-		return fmt.Errorf("Failed to build: %s %w", out, err)
+		shouldBuild = hasNewCommits
 	}
 
-	fmt.Printf("Build output: %s", string(out))
+	if !shouldBuild {
+		return nil
+	}
 
-	return nil
-}
-
-func setupEnvironment() error {
-	data, err := ioutil.ReadFile(configPath)
-
-	if err != nil {
+	if err := docs.Install(); err != nil {
 		return err
 	}
 
-	config := map[string]interface{}{}
-
-	if err := json.Unmarshal(data, &config); err != nil {
-		return err
-	}
-
-	if val, found := os.LookupEnv("PORTAL_URL"); found {
-		config["portalUrl"] = val
-	}
-
-	data, err = json.Marshal(config)
-
-	if err != nil {
-		return err
-	}
-
-	if err := os.WriteFile(configPath, data, 0666); err != nil {
+	if err := docs.Build(); err != nil {
 		return err
 	}
 

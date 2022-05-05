@@ -1,11 +1,11 @@
 {
-  "name": "docs",
+  "name": "otter-docs",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vuepress-vite dev docs",
-    "build": "vuepress-vite build docs"
+    "dev": "vuepress-vite dev vuepress",
+    "build": "vuepress-vite build vuepress"
   },
   "author": "",
   "license": "ISC",
