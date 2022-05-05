@@ -43,15 +43,14 @@ func main() {
 
 	go func() {
 		for {
-			time.Sleep(10 * time.Second)
 
 			updateError = update(git, docs)
 
 			if updateError != nil {
 				log.Printf("failed to update docs: %s", updateError)
-
-				continue
 			}
+
+			time.Sleep(10 * time.Second)
 		}
 	}()
 
