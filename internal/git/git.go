@@ -34,6 +34,18 @@ func New(path, gitUrl, gitBranch string) (*Git, error) {
 	}, nil
 }
 
+func (g *Git) Open() error {
+	repo, err := git.PlainOpen(g.path)
+
+	if err != nil {
+		return err
+	}
+
+	g.repo = repo
+
+	return nil
+}
+
 func (g *Git) Clone() error {
 	repo, err := git.PlainClone(g.path, false, &git.CloneOptions{
 		URL:           g.url.String(),
@@ -49,7 +61,11 @@ func (g *Git) Clone() error {
 	return nil
 }
 
-func (g *Git) IsCloned() bool {
+func (g *Git) IsInitialized() bool {
+	return g.Exists() && g.repo != nil
+}
+
+func (g *Git) Exists() bool {
 	gitPath := filepath.Join(g.path, ".git")
 
 	_, err := os.Stat(gitPath)

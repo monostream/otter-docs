@@ -45,7 +45,7 @@ func main() {
 		for {
 			time.Sleep(10 * time.Second)
 
-			updateError := update(git, docs)
+			updateError = update(git, docs)
 
 			if updateError != nil {
 				log.Printf("failed to update docs: %s", updateError)
@@ -73,9 +73,15 @@ func main() {
 func update(git *git.Git, docs *docs.Docs) error {
 	shouldBuild := false
 
-	if !git.IsCloned() {
-		if err := git.Clone(); err != nil {
-			return err
+	if !git.IsInitialized() {
+		if git.Exists() {
+			if err := git.Open(); err != nil {
+				return err
+			}
+		} else {
+			if err := git.Clone(); err != nil {
+				return err
+			}
 		}
 
 		shouldBuild = true
