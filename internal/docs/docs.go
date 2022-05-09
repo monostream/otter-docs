@@ -2,11 +2,13 @@ package docs
 
 import (
 	"fmt"
+	"time"
 
 	"otter-docs/internal/npm"
 )
 
 type Docs struct {
+	LastBuilt time.Time
 }
 
 func New() (*Docs, error) {
@@ -30,6 +32,8 @@ func (d *Docs) Build() error {
 	if out, err := npm.Run("build"); err != nil {
 		return fmt.Errorf("failed to build docs: %w\n%s", err, out)
 	}
+
+	d.LastBuilt = time.Now()
 
 	return nil
 }

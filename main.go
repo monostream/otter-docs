@@ -18,8 +18,6 @@ type Config struct {
 	Port string `envconfig:"PORT" default:"8080"`
 }
 
-const configPath = "./dist/environment.json"
-
 func main() {
 	var cfg Config
 
@@ -43,7 +41,6 @@ func main() {
 
 	go func() {
 		for {
-
 			updateError = update(git, docs)
 
 			if updateError != nil {
@@ -70,34 +67,20 @@ func main() {
 }
 
 func update(git *git.Git, docs *docs.Docs) error {
-	shouldBuild := false
+	hasNewCommits, err := git.HasNewCommits()
 
-	if !git.IsInitialized() {
-		if git.Exists() {
-			if err := git.Open(); err != nil {
-				return err
-			}
-		} else {
-			if err := git.Clone(); err != nil {
-				return err
-			}
-		}
-
-		shouldBuild = true
+	if err != nil {
+		return err
 	}
 
-	if !shouldBuild {
-		hasNewCommits, err := git.HasNewCommits()
+	if !hasNewCommits && !docs.LastBuilt.IsZero() {
+		return nil
+	}
 
-		if err != nil {
+	if hasNewCommits {
+		if err := git.Pull(); err != nil {
 			return err
 		}
-
-		shouldBuild = hasNewCommits
-	}
-
-	if !shouldBuild {
-		return nil
 	}
 
 	if err := docs.Install(); err != nil {
@@ -107,6 +90,8 @@ func update(git *git.Git, docs *docs.Docs) error {
 	if err := docs.Build(); err != nil {
 		return err
 	}
+
+	log.Print("successfully updated docs")
 
 	return nil
 }

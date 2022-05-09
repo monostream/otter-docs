@@ -2,8 +2,12 @@ import { defineClientAppEnhance } from '@vuepress/client'
 
 declare var __VUEPRESS_SSR__: boolean;
 
-export interface Config {
-  portalUrl: string;
+interface OtterDocsEvent {
+  event: string;
+}
+
+interface NavigateEvent extends OtterDocsEvent {
+  path: string;
 }
 
 export default defineClientAppEnhance(async ({ app, router, siteData }) => {
@@ -12,19 +16,19 @@ export default defineClientAppEnhance(async ({ app, router, siteData }) => {
     return
   }
 
-  const config: Config = await fetch('/environment.json').then((res) => res.json());
+  const bindings: Record<string, string> = await fetch('/__bindings.json').then((res) => res.json());
 
-  window.top.postMessage('/2pack/ready', config.portalUrl)
+  window.top.postMessage('/otter-docs/ready', '*')
 
-  window.addEventListener('message', ({data}) => {
-    if (data?.event == '/2pack/navigate') {
+  window.addEventListener('message', ({ data }: MessageEvent<NavigateEvent>) => {
+    if (data?.event == '/otter-docs/navigate') {
+      const docsPath = bindings[data.path]
+
+      if (docsPath) {
+        router.push(docsPath)
+      }
+      
       console.log(data.path)
-      router.push(data.path)
     }
-
-    // example event
-    // if (data?.event == '/2pack/docker/variables') {
-    //   app.provide('docker/registry', data.registry)
-    // }
   });
 })

@@ -26,15 +26,27 @@ func New(path, gitUrl, gitBranch string) (*Git, error) {
 		return nil, err
 	}
 
-	return &Git{
+	git := &Git{
 		path: path,
 
 		url:    u,
 		branch: gitBranch,
-	}, nil
+	}
+
+	if git.exists() {
+		if err := git.open(); err != nil {
+			return nil, err
+		}
+	} else {
+		if err := git.clone(); err != nil {
+			return nil, err
+		}
+	}
+
+	return git, nil
 }
 
-func (g *Git) Open() error {
+func (g *Git) open() error {
 	repo, err := git.PlainOpen(g.path)
 
 	if err != nil {
@@ -46,7 +58,7 @@ func (g *Git) Open() error {
 	return nil
 }
 
-func (g *Git) Clone() error {
+func (g *Git) clone() error {
 	repo, err := git.PlainClone(g.path, false, &git.CloneOptions{
 		URL:           g.url.String(),
 		ReferenceName: plumbing.NewBranchReferenceName(g.branch),
@@ -61,11 +73,7 @@ func (g *Git) Clone() error {
 	return nil
 }
 
-func (g *Git) IsInitialized() bool {
-	return g.Exists() && g.repo != nil
-}
-
-func (g *Git) Exists() bool {
+func (g *Git) exists() bool {
 	gitPath := filepath.Join(g.path, ".git")
 
 	_, err := os.Stat(gitPath)

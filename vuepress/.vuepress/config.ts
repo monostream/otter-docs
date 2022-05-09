@@ -14,6 +14,13 @@ export default defineUserConfig({
     sidebar: getSidebar(),
   },
   plugins: [
-    'vuepress-plugin-mermaidjs'
+    [
+      "@renovamen/vuepress-plugin-mermaid", {
+        theme: "default",
+        darkTheme: "dark",
+        darkSelector: "html",
+        darkClass: "dark"
+      }
+    ]
   ]
 })

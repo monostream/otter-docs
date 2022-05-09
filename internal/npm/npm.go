@@ -1,6 +1,7 @@
 package npm
 
 import (
+	"fmt"
 	"os/exec"
 )
 
@@ -22,7 +23,7 @@ func npm(args ...string) (string, error) {
 	out, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: %s", err, out)
 	}
 
 	return string(out), nil

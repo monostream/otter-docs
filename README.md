@@ -16,6 +16,10 @@ Otter Docs supports…
 * dynamic nav and sidebar generation
 * full Markdown support with source-code highlighting
 
+## Navigation and Sidebar
+
+TODO
+
 ## Build & Run Locally
 
 To run the Otter Docs Server locally you can choose between Docker or Go. 
