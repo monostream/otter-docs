@@ -1,8 +1,10 @@
-# 🦦 Otter Docs – powerful context-aware Documentation
+# 🦦 Otter Docs – Powerful, Context-Aware Documentation
 
 > Open-sourced by the team at [Monostream](https://monostream.com)
 
 Otter Docs is a context-aware documentation system, supporting dynamic variable injection. The documentation content is written in Markdown and lives in a separate Git repository. This allows non-technical users to write documentation without having to worry about the implememtation and deployment. The Otter Docs server monitors this Git repository and automatically publishes changes made to the content in realtime. 
+
+It's written in Go, TypeScript and builds upon the awesome [VuePress](https://github.com/vuejs/vuepress/) project.
 
 ## Features
 
@@ -35,6 +37,31 @@ If you have docker installed on your system, you can use the following command t
 docker build . -t otter-docs
 docker run -p 8080:8080 -it --env-file ./.env --rm otter-docs
 ```
+
+## Context-aware Integration
+
+Otter Docs can be deployed as a context-aware documentaion, living in a sidebar of another application (called "host application"). The Event API enables bi-directional communication between the two applications. This API informs Otter Docs about the currently active page in the host application. This can be useful to show relevant documentation articles to the user.
+
+![Otter Docs Integration](./integration.drawio.png)
+
+### Path Binding
+
+Path bindings between the host application and Otter Docs can be defined in a file called `__bindings.json` living in the project root of the content repository.
+
+```json 
+{
+  "/path-in-host-app": "/docs-path"
+}
+```
+
+## Custom Theme
+
+```json 
+{
+  "/path-in-host-app": "/docs-path"
+}
+```
+
 
 ## Configuration
 

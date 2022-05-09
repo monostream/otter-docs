@@ -13,4 +13,7 @@ export default defineUserConfig({
     navbar: getNavbar(),
     sidebar: getSidebar(),
   },
+  plugins: [
+    'vuepress-plugin-mermaidjs'
+  ]
 })
