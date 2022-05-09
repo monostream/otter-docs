@@ -38,8 +38,10 @@ docker run -p 8080:8080 -it --env-file ./.env --rm otter-docs
 
 ## Configuration
 
+The following environment varaibles are available to configure Otter-Docs server.
+
 | Name       | Default | Description                                                                                  | Required |
 |------------|---------|----------------------------------------------------------------------------------------------|----------|
-| GIT_URL    |         | URL to the content git repository. Example: https://username:password@example.org/myRepo.git | Yes      |
+| GIT_URL    | _None_  | URL to the content git repository. Example: https://username:password@example.org/myRepo.git | Yes      |
 | GIT_BRANCH | main    |                                                                                              | No       |
 
