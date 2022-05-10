@@ -3,7 +3,7 @@ image:
   repository: "tribblesregistry.azurecr.io/otter-docs"
 
 git:
-  url: "https://cblaettl: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@github.com/monostream/2pack-docs.git"
+  url: "https://github.com/monostream/otter-docs-example.git"
 
 ingress:
   enabled: true

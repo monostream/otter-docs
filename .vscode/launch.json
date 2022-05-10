@@ -9,7 +9,10 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}"
+      "program": "${workspaceFolder}",
+      "env": {
+        "GIT_URL": "https://github.com/monostream/otter-docs-example.git"
+      }
     }
   ]
 }
