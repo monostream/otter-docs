@@ -1,3 +1,7 @@
+example/
+scripts/
+chart/
+
 .git
 ./**/.git
 
