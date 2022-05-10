@@ -20,15 +20,17 @@ export default defineClientAppEnhance(async ({ app, router, siteData }) => {
 
   window.top.postMessage('/otter-docs/ready', '*')
 
-  window.addEventListener('message', ({ data }: MessageEvent<NavigateEvent>) => {
-    if (data?.event == '/otter-docs/navigate') {
-      const docsPath = bindings[data.path]
+  window.addEventListener('message', (event: MessageEvent<NavigateEvent>) => {
+    console.log({ event })
+
+    if (event.data?.event == '/otter-docs/navigate') {
+      const docsPath = bindings[event.data.path]
 
       if (docsPath) {
         router.push(docsPath)
       }
       
-      console.log(data.path)
+      console.log(event.data.path)
     }
   });
 })
