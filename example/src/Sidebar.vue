@@ -3,6 +3,7 @@ import { ref, onUnmounted } from 'vue';
 import Docs from './Docs.vue';
 
 const open = ref(false)
+const isConnected = ref(false)
 
 const minSidebarWidth = 500;
 const sidebarWidth = ref(minSidebarWidth);
@@ -55,10 +56,14 @@ onUnmounted(() => {
     :style="{ width: (open ? sidebarWidth : 0) + 'px'}"
   >
     <div
-      class="flex items-center justify-center transform rotate-180 h-36 top-1/2 absolute left-0 -ml-10 bg-indigo-500 px-2 rounded-r-lg cursor-pointer text-indigo-50 transition-all shadow-lg hover:bg-indigo-400"
+      class="flex gap-2 items-center justify-center transform rotate-180 h-48 top-1/2 absolute left-0 -ml-10 bg-indigo-500 px-2 rounded-r-lg cursor-pointer text-indigo-50 transition-all shadow-lg hover:bg-indigo-400"
       style="writing-mode: vertical-lr; text-orientation: sideways;"
       @click="open = !open"
     >
+      <div class="h-4 w-4 rounded-full transition-all duration-1000 relative" :class="{ 'bg-green-400': isConnected, 'bg-red-500': !isConnected }">
+        <div class="h-4 w-4 rounded-full transition-all duration-1000 animate-ping absolute top-0 left-0" :class="{ 'bg-green-500': isConnected, 'bg-red-500': !isConnected }">
+        </div> 
+      </div> 
       {{ open ? 'Close' : 'Open' }} Otter Docs
     </div>
     <div
@@ -68,6 +73,6 @@ onUnmounted(() => {
       @mousedown="onMouseDown"
     />
 
-    <Docs :class="{ 'pointer-events-none': isMouseDown, 'block': open, 'hidden': !open }" />
+    <Docs :class="{ 'pointer-events-none': isMouseDown, 'block': open, 'hidden': !open }" @connected="isConnected = $event" />
   </div>
 </template>

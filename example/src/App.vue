@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router';
 import Sidebar from './Sidebar.vue';
 
 const route = useRoute()
+
 </script>
 
 <template>

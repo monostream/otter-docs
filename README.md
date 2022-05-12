@@ -42,6 +42,30 @@ docker build . -t otter-docs
 docker run -p 8080:8080 -it --env-file ./.env --rm otter-docs
 ```
 
+## Architecture
+
+### Go Server
+
+Tasks:
+* Watch git repository for changes
+* Trigger rebuild
+* Serve docs
+
+### Node Application
+
+Tasks:
+* Dynamically generate navigation and sidebar structure
+* Parse and sanatize `config.json`
+* Apply `config.json`
+* Render Markdown to HTML
+
+### JavaScript Client Application
+
+Tasks:
+* Listen for Events from host application
+* Parse path binding Regexp
+* Handle navigation
+
 ## Context-aware Integration
 
 Otter Docs can be deployed as a context-aware documentaion, living in a sidebar of another application (called "host application"). The Event API enables bi-directional communication between the two applications. This API informs Otter Docs about the currently active page in the host application. This can be useful to show relevant documentation articles to the user.

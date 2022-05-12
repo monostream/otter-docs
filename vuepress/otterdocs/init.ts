@@ -4,11 +4,19 @@ import { Config } from './plugin';
 
 declare var __VUEPRESS_SSR__: boolean;
 
-interface OtterDocsEvent {
-  event: string;
+enum OtterDocsEvents {
+  Ready = '/otter-docs/ready',
+  Navigate = '/otter-docs/navigate',
 }
 
-interface NavigateEvent extends OtterDocsEvent {
+type OtterDocsEvent = ReadyEvent | NavigateEvent;
+
+interface ReadyEvent {
+  type: OtterDocsEvents.Ready
+}
+
+interface NavigateEvent {
+  type: OtterDocsEvents.Navigate
   path: string;
 }
 
@@ -25,27 +33,28 @@ export const initClient = (async ({ app, router, siteData }) => {
   parseBindings(config);
   setColors(config);
 
-  ready();
+  sendMessage({ type: OtterDocsEvents.Ready })
 
   window.addEventListener('message', listener(router));
 })
 
-const ready = () => {
-  window.top.postMessage('/otter-docs/ready', '*')
+const sendMessage = (event: OtterDocsEvent) => {
+  window.top.postMessage(event, '*')
 }
 
 const listener = (router) => {
-  return (event: MessageEvent<NavigateEvent>) => {
+  return (event: MessageEvent<OtterDocsEvent>) => {
     if (event.source === window) {
-      // our own event
+      // ignore our own events
+
       return
     }
-    
-    console.log('got event: ', event)
+
+    console.debug('listener revieved event: ', event)
   
-    switch (event.data?.event) {
-      case '/otter-docs/navigate':
-        handleNavigation(event, router)
+    switch (event.data?.type) {
+      case OtterDocsEvents.Navigate:
+        handleNavigation(event.data, router)
         
         break;
     
@@ -68,28 +77,38 @@ const loadConfig = async (): Promise<Config> => {
 }
 
 const parseBindings = (config: Config) => {
-  if (config.bindings) {
-    for (const hostPath of Object.keys(config.bindings)) {
-      const regexp = pathToRegexp(hostPath)
+  if (!config.bindings) {
+    console.warn('no binding defined in config')
 
-      bindings.set(regexp, bindings[hostPath])
-    }
+    return
+  }
+
+  for (const hostPath of Object.keys(config.bindings)) {
+    const key = pathToRegexp(hostPath)
+    const value = config.bindings[hostPath]
+
+    bindings.set(key, value)
   }
 }
 
-const handleNavigation = async (event: MessageEvent<NavigateEvent>, router: Router) => {
-  const hostPath = event.data.path
+const handleNavigation = async (event: NavigateEvent, router: Router) => {
+  const hostPath = event.path
 
-  for (const regexp of bindings.keys()) {
+  console.debug('got host path: ', hostPath)
+  
+  for (const [regexp, docsPath] of bindings.entries()) {
+    console.debug('check if host path matches with: ', regexp)
+
     const match = regexp.exec(hostPath)
 
-    if (match.length < 1) {
-      console.log('no match for: ', hostPath)
-
-      return
+    if (!match || match?.length < 1) {
+      console.debug('no match for: ', hostPath);
+      
+      continue;
     }
 
-    const docsPath = bindings.get(regexp)
+    console.debug('match: ', match);
+    console.debug('docs path: ', docsPath);
 
     await router.push(docsPath)
 

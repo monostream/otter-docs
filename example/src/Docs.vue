@@ -1,25 +1,17 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { initHost } from './otterdocs';
 
-const docsUrl = "https://docs.indigo.tribbles.cloud/"
+// const docsUrl = "https://docs.indigo.tribbles.cloud/"
+const docsUrl = "http://localhost:8080"
 
-const router = useRouter();
-const route = useRoute();
-let isReady = false;
 const iframe = ref<HTMLIFrameElement | null>(null);
+const isConnected = ref(false);
 
-router.afterEach((to) => {
-  if (!isReady) {
-    return
-  }
+const emits = defineEmits(['connected'])
 
-  const msg = { event: '/otter-docs/navigate', path: to.fullPath};
-
-  iframe.value?.contentWindow?.postMessage(msg, docsUrl);
-});
-
-onMounted(() => {
+onMounted(async () => {
   if (!iframe.value) {
     console.warn('iframe ref is undefined');
     return;
@@ -30,21 +22,9 @@ onMounted(() => {
     return;
   }
 
-  window.addEventListener('message', (event) => {
-    console.log({ event })
+  isConnected.value = await initHost(iframe.value.contentWindow, useRouter())
 
-    if (event.data === '/otter-docs/ready') {
-      if (!iframe.value?.contentWindow) {
-        return;
-      }
-
-      isReady = true;
-
-      const data = { event: '/otter-docs/navigate', path: route.meta?.docsPath };
-
-      iframe.value?.contentWindow?.postMessage(data, docsUrl);
-    }
-  });
+  emits('connected', isConnected.value)
 });
 </script>
 
