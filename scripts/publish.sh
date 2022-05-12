@@ -1,7 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-az login
 az account set --subscription "Tribbles" 
 az acr login -n tribblesregistry
 
