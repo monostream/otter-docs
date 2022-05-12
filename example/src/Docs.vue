@@ -2,8 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-// const docsUrl = "https://docs.indigo.tribbles.cloud/"
-const docsUrl = "http://localhost:8080"
+const docsUrl = "https://docs.indigo.tribbles.cloud/"
 
 const router = useRouter();
 const route = useRoute();
