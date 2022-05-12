@@ -1,15 +1,16 @@
 import { defineUserConfig } from '@vuepress/cli'
-import { getNavbar, getSidebar } from './sidebar'
+import { otterDocs } from '../otterdocs/plugin'
+import { getNavbar, getSidebar } from '../otterdocs/sidebar'
 
 export default defineUserConfig({
   head: [
-    ['link', { rel: 'icon', href: '/images/favicon.png' }]
+    ['link', { rel: 'icon', href: '/favicon.ico' }]
   ],
   title: '2pack',
   dest: './dist',
   themeConfig: {
     contributors: false,
-    logo: '/images/logo.png',
+    logo: '/logo.png',
     navbar: getNavbar(),
     sidebar: getSidebar(),
   },
@@ -21,6 +22,7 @@ export default defineUserConfig({
         darkSelector: "html",
         darkClass: "dark"
       }
-    ]
+    ],
+    otterDocs()
   ]
 })

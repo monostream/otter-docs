@@ -2,7 +2,7 @@
 vuepress/.vuepress/.temp/
 vuepress/.vuepress/.cache/
 vuepress/.vuepress/dist/
-vuepress/guide/
+vuepress/docs/
 
 # Dist files
 dist/

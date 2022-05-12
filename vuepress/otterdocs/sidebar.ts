@@ -1,47 +1,51 @@
 import { readdirSync, statSync } from 'fs'
 import { join, extname } from 'path';
 
-const BASE_PATH = join(__dirname, '..', 'guide')
+const contentDir = 'docs'
+const contentPath = join(__dirname, '..', contentDir)
+
+const basePath = join('/', contentDir)
 
 export const getNavbar = () => {
-  const entries = readdirSync(BASE_PATH)
+  const entries = readdirSync(contentPath)
   const result = []
 
   for (const entry of entries) {
-    const stat = statSync(join(BASE_PATH, entry))
+    const stat = statSync(join(contentPath, entry))
 
     if (stat.isDirectory() || extname(entry).toLowerCase() === '.md') {
       if (entry === '.git') {
         continue
       }
 
-      result.push(join('/guide', entry, '/'))
+      result.push(join(basePath, entry, '/'))
     }
   }
+
 
   return result
 }
 
 export const getSidebar = () => {
-  const entries = readdirSync(BASE_PATH)
+  const entries = readdirSync(contentPath)
   const result: Record<string, string[]> = {}
 
   for (const entry of entries) {
-    const stat = statSync(join(BASE_PATH, entry))
+    const stat = statSync(join(contentPath, entry))
 
-    if (!stat.isDirectory()) {
+    if (!stat.isDirectory() || entry.startsWith('.')) {
       continue
     }
 
-    const key = join('/guide', entry, '/')
+    const key = join(basePath, entry, '/')
 
     result[key] = []
 
-    const subEntries = readdirSync(join(BASE_PATH, entry))
+    const subEntries = readdirSync(join(contentPath, entry))
 
     for (const subEntry of subEntries) {
       if (extname(subEntry).toLowerCase() === '.md') {
-        result[key].push(join('/guide', entry, subEntry))
+        result[key].push(join(basePath, entry, subEntry))
       }
     }
   }

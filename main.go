@@ -25,7 +25,7 @@ func main() {
 		panic(err)
 	}
 
-	git, err := git.New("./vuepress/guide/", cfg.URL, cfg.Branch)
+	git, err := git.New("./vuepress/docs/", cfg.URL, cfg.Branch)
 
 	if err != nil {
 		panic(err)

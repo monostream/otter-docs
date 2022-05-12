@@ -1,0 +1,13 @@
+{
+  "name": "Otter Docs",
+  "tagline": "Powerful, Context-Aware Documentation Framework",
+  "getStartedLink": "/docs/Projects/",
+  "colors": {
+    "brand": "#ff1a8c",
+    "brandLight": "#ff3399"
+  },
+  "bindings": {
+    "/": "/docs/Projects/",
+    "/project/:projectId": "/docs/Projects/Details.html"
+  }
+}
