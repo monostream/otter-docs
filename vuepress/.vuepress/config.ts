@@ -1,5 +1,4 @@
 import { defaultTheme, defineUserConfig } from 'vuepress'
-import mermaidPlugin from '@renovamen/vuepress-plugin-mermaid'
 
 import { otterDocs } from '../otterdocs/plugin'
 import { getNavbar, getSidebar } from '../otterdocs/sidebar'
