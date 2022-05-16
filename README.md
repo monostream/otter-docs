@@ -1,8 +1,12 @@
+![otter docs logo](./logo.png)
+
 # 🦦 Otter Docs – Powerful, Context-Aware Documentation
 
 > Open-sourced by the team at [Monostream](https://monostream.com)
 
-Otter Docs is a context-aware documentation system, supporting dynamic variable injection. The documentation content is written in Markdown and lives in a separate Git repository. This allows non-technical users to write documentation without having to worry about the implememtation and deployment. The Otter Docs server monitors this Git repository and automatically publishes changes made to the content in realtime. 
+Otter Docs is a context-aware documentation framework, featuring dynamic variable injection and a simple, yet powerful event API.
+
+The documentation content is written in Markdown and lives in a separate Git repository. This allows a clear separation between content and technical implementation, and enables non-technocal users to write documentation without having to worry about implememtation and deployment. Changes made to the content Git repository are automatically published. 
 
 It's written in Go, TypeScript and builds upon the awesome [VuePress](https://github.com/vuejs/vuepress/) project.
 
@@ -10,17 +14,17 @@ It's written in Go, TypeScript and builds upon the awesome [VuePress](https://gi
 
 Otter Docs supports…
 
-* a flexible event API to interact add context-awareness
+* a simple, yet powerful event API
 * dynamic variables injection from host app
 * default values for variables
-* dynamic nav and sidebar generation
+* dynamic navigation and sidebar generation
 * full Markdown support with source-code highlighting
 
 ## Navigation and Sidebar
 
 TODO
 
-## Build & Run Locally
+## Development
 
 To run the Otter Docs Server locally you can choose between Docker or Go. 
 
