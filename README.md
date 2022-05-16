@@ -12,8 +12,6 @@ The documentation content is written in Markdown and lives in a Git repository. 
 
 Otter Docs is written in Go, TypeScript and builds upon the awesome [VuePress](https://github.com/vuejs/vuepress/) project.
 
-It's written in Go, TypeScript and builds upon the awesome [VuePress](https://github.com/vuejs/vuepress/) project.
-
 ## Features
 
 * [Clear Separation of Concerns: Content vs. Technical Details](#content-repository)
