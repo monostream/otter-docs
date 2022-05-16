@@ -1,4 +1,6 @@
-import { defineUserConfig } from '@vuepress/cli'
+import { defaultTheme, defineUserConfig } from 'vuepress'
+import mermaidPlugin from '@renovamen/vuepress-plugin-mermaid'
+
 import { otterDocs } from '../otterdocs/plugin'
 import { getNavbar, getSidebar } from '../otterdocs/sidebar'
 
@@ -8,21 +10,20 @@ export default defineUserConfig({
   ],
   title: '2pack',
   dest: './dist',
-  themeConfig: {
+  theme: defaultTheme({
     contributors: false,
     logo: '/logo.png',
     navbar: getNavbar(),
     sidebar: getSidebar(),
-  },
+  }),
   plugins: [
-    [
-      "@renovamen/vuepress-plugin-mermaid", {
-        theme: "default",
-        darkTheme: "dark",
-        darkSelector: "html",
-        darkClass: "dark"
-      }
-    ],
+    // TODO: Mermaid plugin in not compatible with current vuepress v2 version
+    // mermaidPlugin({
+    //   theme: "default",
+    //   darkTheme: "dark",
+    //   darkSelector: "html",
+    //   darkClass: "dark"
+    // }),
     otterDocs()
   ]
 })

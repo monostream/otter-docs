@@ -1,4 +1,4 @@
-import { App, PageData, PluginConfig, PluginOptions } from 'vuepress-vite'
+import { App, Page, PageData, PluginFunction } from 'vuepress'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
@@ -21,7 +21,7 @@ export interface SanatizedOptions {
   configPath: string;
 }
 
-export const otterDocs = (options?: Options): PluginConfig<PluginOptions> => {
+export const otterDocs = (options?: Options): PluginFunction => {
   const sanatizedOptions = sanatizeOptions(options)
 
   const config = loadConfig(sanatizedOptions);
@@ -29,7 +29,8 @@ export const otterDocs = (options?: Options): PluginConfig<PluginOptions> => {
   return (app: App) => {
     return {
       name: 'vuepress-plugin-otter-docs',
-      extendsPageData: extendsPageData(config),
+      extendsPage: extendsPage(config),
+      multiple: false
     }
   }
 }
@@ -55,25 +56,19 @@ const loadConfig = (options: SanatizedOptions): Config => {
   return config
 }
 
-const extendsPageData = (config: Config) => {
-  return (page: PageData) => {
-    const data: Partial<PageData> = {
-      frontmatter: page.frontmatter
-    }
-
+const extendsPage = (config: Config) => {
+  return (page: Page, app: App) =>  {
     if (page.frontmatter.home) {
-      data.frontmatter.heroText = config.name
-      data.frontmatter.tagline = config.tagline
+      page.frontmatter.heroText = config.name
+      page.frontmatter.tagline = config.tagline
 
       if (config.getStartedLink) {
-        data.frontmatter.actions = [{
+        page.frontmatter.actions = [{
           text: 'Get Started',
           link: '/docs/diagrams/',
           type: 'primary'
         }];
       }
     }
-
-    return data
   }
 }

@@ -4,16 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vuepress-vite dev vuepress",
-    "build": "vuepress-vite build vuepress"
+    "dev": "vuepress dev vuepress",
+    "build": "vuepress build vuepress"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "vuepress-vite": "^2.0.0-beta.27"
+    "@vuepress/client": "^2.0.0-beta.45",
+    "@vueuse/core": "^5.0.0",
+    "vuepress": "^2.0.0-beta.45"
   },
   "dependencies": {
-    "@renovamen/vuepress-plugin-mermaid": "^2.0.0-alpha.20",
     "fs": "^0.0.1-security",
     "path": "^0.12.7",
     "path-to-regexp": "^6.2.1",

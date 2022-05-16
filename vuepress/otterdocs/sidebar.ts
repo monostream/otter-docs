@@ -14,14 +14,13 @@ export const getNavbar = () => {
     const stat = statSync(join(contentPath, entry))
 
     if (stat.isDirectory() || extname(entry).toLowerCase() === '.md') {
-      if (entry === '.git') {
+      if (entry.startsWith('.')) {
         continue
       }
 
       result.push(join(basePath, entry, '/'))
     }
   }
-
 
   return result
 }
