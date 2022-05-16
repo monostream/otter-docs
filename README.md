@@ -16,13 +16,13 @@ It's written in Go, TypeScript and builds upon the awesome [VuePress](https://gi
 
 ## Features
 
-* [Clear Separation of Concerns: Content vs. Technical Details](./#content-repository)
-* [Simple, yet powerful Event API](./#event-api)
+* [Clear Separation of Concerns: Content vs. Technical Details](#content-repository)
+* [Simple, yet powerful Event API](#event-api)
   * dynamic variables injection from host app
   * default values for variables
-* [Automatic Navigation and Sidebar](./#navigation-and-sidebar)
-* [Full Markdown support with Source-Code Highlighting](./#markdown)
-* [Custom Themes](./#custom-themes)
+* [Automatic Navigation and Sidebar](#navigation-and-sidebar)
+* [Full Markdown support with Source-Code Highlighting](#markdown)
+* [Custom Themes](#custom-themes)
 
 ## Content Repository
 
