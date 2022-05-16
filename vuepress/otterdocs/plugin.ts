@@ -30,7 +30,7 @@ export const otterDocs = (options?: Options): PluginFunction => {
     return {
       name: 'vuepress-plugin-otter-docs',
       extendsPage: extendsPage(config),
-      multiple: false
+      multiple: false,
     }
   }
 }
@@ -58,6 +58,8 @@ const loadConfig = (options: SanatizedOptions): Config => {
 
 const extendsPage = (config: Config) => {
   return (page: Page, app: App) =>  {
+    app.siteData.title = config.name
+
     if (page.frontmatter.home) {
       page.frontmatter.heroText = config.name
       page.frontmatter.tagline = config.tagline
