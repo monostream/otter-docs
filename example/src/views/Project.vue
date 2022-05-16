@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { injectVariables } from '../otterdocs';
+
 const project = {
   fullName: 'Margot Foster',
   job: 'Backend Developer',
@@ -6,6 +8,8 @@ const project = {
   salary: '$120,000',
   about: 'Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.',
 }
+
+injectVariables({ project })
 </script>
 
 <template>

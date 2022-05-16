@@ -1,4 +1,6 @@
+import { SiteDataRef, usePageData } from '@vuepress/client';
 import { pathToRegexp } from 'path-to-regexp';
+import { App } from 'vue';
 import { Router } from 'vue-router';
 import { Config } from './plugin';
 
@@ -7,22 +9,29 @@ declare var __VUEPRESS_SSR__: boolean;
 enum OtterDocsEvents {
   Ready = '/otter-docs/ready',
   Navigate = '/otter-docs/navigate',
+  Inject = '/otter-docs/inject',
 }
 
-type OtterDocsEvent = ReadyEvent | NavigateEvent;
+type OtterDocsEvent = ReadyEvent | NavigateEvent | InjectEvent;
 
 interface ReadyEvent {
-  type: OtterDocsEvents.Ready
+  type: OtterDocsEvents.Ready;
 }
 
 interface NavigateEvent {
-  type: OtterDocsEvents.Navigate
+  type: OtterDocsEvents.Navigate;
   path: string;
 }
 
+interface InjectEvent {
+  type: OtterDocsEvents.Inject;
+  variables: Record<string, any>;
+}
+
+
 const bindings: Map<RegExp, string> = new Map()
 
-export const initClient = (async ({ app, router, siteData }) => {
+export const initClient = (async (app: App, router: Router, siteData: SiteDataRef) => {
   if (__VUEPRESS_SSR__) {
     // skip for server service rendering
     return
@@ -35,14 +44,14 @@ export const initClient = (async ({ app, router, siteData }) => {
 
   sendMessage({ type: OtterDocsEvents.Ready })
 
-  window.addEventListener('message', listener(router));
+  window.addEventListener('message', listener(app, router, siteData));
 })
 
 const sendMessage = (event: OtterDocsEvent) => {
   window.top.postMessage(event, '*')
 }
 
-const listener = (router) => {
+const listener = (app: App, router: Router, siteData: SiteDataRef) => {
   return (event: MessageEvent<OtterDocsEvent>) => {
     if (event.source === window) {
       // ignore our own events
@@ -57,6 +66,9 @@ const listener = (router) => {
         handleNavigation(event.data, router)
         
         break;
+
+      case OtterDocsEvents.Inject:
+        handleInject(event.data, siteData)
     
       default:
         break;
@@ -114,6 +126,12 @@ const handleNavigation = async (event: NavigateEvent, router: Router) => {
 
     break;
   }
+}
+
+const handleInject = (event: InjectEvent, siteData: SiteDataRef) => {
+  console.debug('got variables: ', event.variables)
+  
+  siteData.value['variables'] = event.variables
 }
 
 const setColors = (config: Config) => {

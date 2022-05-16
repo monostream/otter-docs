@@ -3,20 +3,30 @@ import { Router } from "vue-router";
 enum OtterDocsEvents {
   Ready = '/otter-docs/ready',
   Navigate = '/otter-docs/navigate',
+  Inject = '/otter-docs/inject',
 }
 
-type OtterDocsEvent = ReadyEvent | NavigateEvent;
+type OtterDocsEvent = ReadyEvent | NavigateEvent | InjectEvent;
 
 interface ReadyEvent {
-  type: OtterDocsEvents.Ready
+  type: OtterDocsEvents.Ready;
 }
 
 interface NavigateEvent {
-  type: OtterDocsEvents.Navigate
+  type: OtterDocsEvents.Navigate;
   path: string;
 }
 
+interface InjectEvent {
+  type: OtterDocsEvents.Inject;
+  variables: Record<string, any>;
+}
+
+let iframeWindow: (Window | undefined) = undefined
+
 export const initHost = (contentWindow: Window, router: Router) => {
+  iframeWindow = contentWindow
+
   const isReady = new Promise<boolean>((resolve, reject) => {
     window.addEventListener('message', listener(contentWindow, router, resolve));
   
@@ -49,7 +59,13 @@ const listener = (contentWindow: Window, router: Router, onReady: (ready: boolea
   }
 }
 
-const sendMessage = (contentWindow: Window, event: OtterDocsEvent) => {
+const sendMessage = (contentWindow: (Window | undefined), event: OtterDocsEvent) => {
+  if (!contentWindow) {
+    console.debug('host application is not yet ready to send event: ', event)
+
+    return
+  }
+
   contentWindow.postMessage(event, '*')
 }
 
@@ -58,18 +74,30 @@ const handleReady = (event: ReadyEvent, contentWindow: Window, currentPath: stri
 
   onReady(true);
 
-  const data = { type: OtterDocsEvents.Navigate, path: currentPath };
+  const data: NavigateEvent = {
+    type: OtterDocsEvents.Navigate, 
+    path: currentPath
+  };
 
   sendMessage(contentWindow, data);
 }
 
 const subscribeToNavigationEvents = (contentWindow: Window, router: Router) => {
   router.afterEach((to) => {
-    const event = { 
+    const event: NavigateEvent = { 
       type: OtterDocsEvents.Navigate, 
       path: to.fullPath
     };
 
     sendMessage(contentWindow, event)
   });
+}
+
+export const injectVariables = (variables: Record<string, any>) => {
+  const event: InjectEvent = {
+    type: OtterDocsEvents.Inject,
+    variables
+  };
+
+  sendMessage(iframeWindow, event);
 }
