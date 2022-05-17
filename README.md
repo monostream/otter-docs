@@ -16,10 +16,9 @@ Otter Docs is written in Go, TypeScript and builds upon the awesome [VuePress](h
 
 ### Deploy to Kubernetes using helm
 
-1. `git clone https://github.com/monostream/otter-docs.git`
-2. `cd otter-docs`
-3. Set `git.url` to your [content git repository](#content-repository) and configure `ingress` in `values.yaml`
-4. `helm upgrade --install otter-docs -f values.yaml ./chart`
+1. `git clone https://github.com/monostream/otter-docs.git && cd otter-docs`
+2. Set `git.url` to your [content git repository](#content-repository) and configure `ingress` in `values.yaml`
+3. `helm upgrade --install otter-docs -f values.yaml ./chart`
 
 ### Docker
 
