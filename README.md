@@ -24,7 +24,23 @@ Otter Docs is written in Go, TypeScript and builds upon the awesome [VuePress](h
 
 ## Content Repository
 
-TODO
+The content of Otter Docs is written in Markdown files that are stored in a separate git repository.
+
+The structure of the repository should follow this structure:
+
+```
+/
+├── .otterdocs
+│   ├── config.json           # [Optional] config file
+│   ├── logo.png              # [Optional] logo
+│   └── favicon.ico           # [Optional] favicon
+├── nav-item-1                # top-level directories map to navigation links               
+│   ├── readme.md             # define title of navigation item, server as index page | Link: /nav-item-1
+│   └── sidebar-item-1-1.md   # documentation page, will appear in sidebar            | Link: /nav-item-1/sidebar-item-1-1.html
+└── nav-item-2                # ...
+    ├── readme.md             # ...                                                   | Link: /nav-item-2
+    └── sidebar-item-2-1.md   # ...                                                   | Link: /nav-item-2/sidebar-item-2-1.html
+```
 
 ## Event API
 
@@ -32,7 +48,13 @@ TODO
 
 ## Navigation and Sidebar
 
-TODO
+Top-level directories or files are mapped to navigation items. To customize the label text, place a `readme.md` file inside and set the `title` frontmatter attribute. Learn more about pages in the official [VuePress v2 documentation](https://v2.vuepress.vuejs.org/guide/page.html#frontmatter).
+
+Pages inside directories are mapped to entries in the sidebar.
+
+Heading inside a page are mapped to sub-entries in the sidebar.
+
+**Note: Currently pages cannot be nested depper than one level.**
 
 ## Markdown
 
