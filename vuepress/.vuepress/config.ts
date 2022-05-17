@@ -1,7 +1,10 @@
+import { resolve } from 'path'
 import { defaultTheme, defineUserConfig } from 'vuepress'
+import { registerMermaidPlugin } from '../mermaid/plugin'
 
-import { otterDocs } from '../otterdocs/plugin'
+import { registerOtterDocsPlugin } from '../otterdocs/plugin'
 import { getNavbar, getSidebar } from '../otterdocs/sidebar'
+
 
 export default defineUserConfig({
   head: [
@@ -23,6 +26,7 @@ export default defineUserConfig({
     //   darkSelector: "html",
     //   darkClass: "dark"
     // }),
-    otterDocs()
+    registerOtterDocsPlugin(),
+    registerMermaidPlugin()
   ]
 })

@@ -21,7 +21,7 @@ export interface SanatizedOptions {
   configPath: string;
 }
 
-export const otterDocs = (options?: Options): PluginFunction => {
+export const registerOtterDocsPlugin = (options?: Options): PluginFunction => {
   const sanatizedOptions = sanatizeOptions(options)
 
   const config = loadConfig(sanatizedOptions);
