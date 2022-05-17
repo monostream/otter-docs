@@ -12,6 +12,19 @@ The documentation content is written in Markdown and lives in a Git repository. 
 
 Otter Docs is written in Go, TypeScript and builds upon the awesome [VuePress](https://github.com/vuejs/vuepress/) project.
 
+## Quickstart
+
+### Deploy to Kubernetes using helm
+
+1. `git clone https://github.com/monostream/otter-docs.git`
+2. `cd otter-docs`
+3. Set `git.url` to your [content git repository](#content-repository) and configure `ingress` in `values.yaml`
+4. `helm upgrade --install otter-docs -f values.yaml ./chart`
+
+### Docker
+
+Docker image can be found on [Docker Hub](https://hub.docker.com/repository/docker/monostream/otter-docs).
+
 ## Features
 
 * [Clear Separation of Concerns: Content vs. Technical Details](#content-repository)
@@ -48,11 +61,11 @@ Check out the [example](./example/src/otterdocs.ts) on how to send and recieve m
 
 Here is an overview of all events:
 
-| Event    | Type                   | Description                                        |
-|----------|------------------------|----------------------------------------------------|
-| Ready    | `/otter-docs/ready`    | Otter Docs is ready                                |
-| Navigate | `/otter-docs/navigate` | Host application navigated to a new path           |
-| Inject   | `/otter-docs/inject`   | Send variables from host application to Otter Docs |
+| Event    | Type                   | Description                                                    |
+|----------|------------------------|----------------------------------------------------------------|
+| Ready    | `/otter-docs/ready`    | Otter Docs is ready (sent from Otter Docs --> Host Application |
+| Navigate | `/otter-docs/navigate` | Host application navigated to a new path                       |
+| Inject   | `/otter-docs/inject`   | Send variables from host application to Otter Docs             |
 
 ## Navigation and Sidebar
 
@@ -153,5 +166,5 @@ The following environment varaibles are available to configure Otter-Docs server
 | Name       | Default | Description                                                                                  | Required |
 |------------|---------|----------------------------------------------------------------------------------------------|----------|
 | GIT_URL    | _None_  | URL to the content git repository. Example: https://username:password@example.org/myRepo.git | Yes      |
-| GIT_BRANCH | main    |                                                                                              | No       |
+| GIT_BRANCH | main    | The branch that should be published and monitored by Otter Docs                              | No       |
 
