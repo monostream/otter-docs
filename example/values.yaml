@@ -1,7 +1,3 @@
-
-image:
-  repository: "tribblesregistry.azurecr.io/otter-docs-example"
-
 ingress:
   enabled: true
   ingressClassName: "nginx"

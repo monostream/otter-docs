@@ -1,15 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-az account set --subscription "Tribbles" 
-az acr login -n tribblesregistry
-
 cd ..
 
-docker build --platform linux/amd64 . -t tribblesregistry.azurecr.io/otter-docs
-docker push tribblesregistry.azurecr.io/otter-docs
+docker build --platform linux/amd64 . -t monostream/otter-docs
+docker push monostream/otter-docs
 
 cd example/
 
-docker build --platform linux/amd64 . -t tribblesregistry.azurecr.io/otter-docs-example
-docker push tribblesregistry.azurecr.io/otter-docs-example
+docker build --platform linux/amd64 . -t monostream/otter-docs-example
+docker push monostream/otter-docs-example

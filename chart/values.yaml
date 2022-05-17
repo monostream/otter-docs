@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: "otter-docs"
+  repository: "monostream/otter-docs"
   pullPolicy: "Always"
   tag: ""
 
