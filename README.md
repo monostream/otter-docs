@@ -24,7 +24,7 @@ Otter Docs is written in Go, TypeScript and builds upon the awesome [VuePress](h
 
 ## Content Repository
 
-The content of Otter Docs is written in Markdown files that are stored in a separate git repository.
+The content of Otter Docs is written in Markdown files that are stored in a separate git repository. The URL to this repository has to be configured in Otter Docs. See [Configuration](#configuration) for more information.
 
 The structure of the repository should follow this structure:
 
@@ -44,7 +44,15 @@ The structure of the repository should follow this structure:
 
 ## Event API
 
-TODO
+Check out the [example](./example/src/otterdocs.ts) on how to send and recieve messages to and from Otter Docs.
+
+Here is an overview of all events:
+
+| Event    | Type                   | Description                                        |
+|----------|------------------------|----------------------------------------------------|
+| Ready    | `/otter-docs/ready`    | Otter Docs is ready                                |
+| Navigate | `/otter-docs/navigate` | Host application navigated to a new path           |
+| Inject   | `/otter-docs/inject`   | Send variables from host application to Otter Docs |
 
 ## Navigation and Sidebar
 
