@@ -8,7 +8,7 @@ Otter Docs is a context-aware documentation framework, featuring dynamic variabl
   <img alt="otter docs logo" src="./logo.png" width="500" />
 </p>
 
-The documentation content is written in Markdown and lives in a Git repository. This enables non-technocal users to write documentation without having to worry about implememtation and deployment. Changes made to the content Git repository are automatically published by Otter Docs. 
+The documentation content is written in Markdown and lives in a Git repository. This enables non-technical users to write documentation without having to worry about implememtation and deployment. Changes made to the content Git repository are automatically published by Otter Docs. 
 
 Otter Docs is written in Go, TypeScript and builds upon the awesome [VuePress](https://github.com/vuejs/vuepress/) project.
 
@@ -83,7 +83,32 @@ For rendering Markdown to HTML content, Otter Docs uses [VuePress v2](https://gi
 
 Check out the [official documentation](https://v2.vuepress.vuejs.org/guide/markdown.html) to learn all about the Markdown features of Otter Docs.
 
-## Custom Themes
+## `config.json`
+
+To configure Otter Docs, create a file `/.otterdocs/config.json` in your content git repository. The following options are available
+
+```javascript
+{
+  "name": "Otter Docs",                                         // name of the documentation used as title
+  "tagline": "Powerful, Context-Aware Documentation Framework", // tagline on the home page
+  "getStartedLink": "/docs/Projects/",                          // link of the "Getting Started" button on the home page
+  "colors": {                                                   // custom theme
+    "brand": "#ff1a8c",                                         // brand color used for buttons, links, …
+    "brandLight": "#ff3399"                                     // light brand color used for hover states of buttons, links, …
+  },
+  "bindings": {                                                 // object mapping path of the host application to docs path (using path-to-regexp)
+    "/": "/docs/Projects/",                                     // when host navigates to /          --> docs navigate to /docs/Projects/
+    "/project/:projectId": "/docs/Projects/Details.html"        // when host navigates to /project/1 --> docs navigate to /docs/Projects/Details.html
+  }
+}
+```
+
+### Logo and Favicon
+
+To change the logo displayed in the navigation, create a file called `/.otterdocs/logo.png` in your content git repository.
+Similarly, to set a custom favicon, copy it to `/.otterdocs/favicon.ico`.
+
+### Custom Themes
 
 To customize the colors of Otter Docs, `config.json` supports an optional object `colors`. In this objects two colors can be defined:
 
