@@ -59,7 +59,10 @@ The structure of the repository should follow this structure:
 
 Check out the [example](./example/src/otterdocs.ts) on how to send and recieve messages to and from Otter Docs.
 
-![Otter Docs Integration](./integration.drawio.png)
+
+<p align="center">
+  <img alt="Otter Docs Integration in Host Application" src="./integration.drawio.png" />
+</p>
 
 Otter Docs can be deployed as a context-aware documentaion, living in a sidebar of another application (called "host application"). The Event API enables bi-directional communication between the two applications. This API informs Otter Docs about the currently active page in the host application. This can be useful to show relevant documentation articles to the user.
 
