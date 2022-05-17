@@ -8,7 +8,7 @@ Otter Docs is a context-aware documentation framework, featuring dynamic variabl
   <img alt="otter docs logo" src="./logo.png" width="500" />
 </p>
 
-The documentation content is written in Markdown and lives in a Git repository. This enables non-technocal users to write documentation without having to worry about implememtation and deployment. Changes made to the content Git repository are automatically published by Otter Docs. 
+The documentation content is written in Markdown and lives in a Git repository. This enables non-technical users to write documentation without having to worry about implememtation and deployment. Changes made to the content Git repository are automatically published by Otter Docs. 
 
 Otter Docs is written in Go, TypeScript and builds upon the awesome [VuePress](https://github.com/vuejs/vuepress/) project.
 
