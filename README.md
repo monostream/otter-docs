@@ -59,6 +59,10 @@ The structure of the repository should follow this structure:
 
 Check out the [example](./example/src/otterdocs.ts) on how to send and recieve messages to and from Otter Docs.
 
+![Otter Docs Integration](./integration.drawio.png)
+
+Otter Docs can be deployed as a context-aware documentaion, living in a sidebar of another application (called "host application"). The Event API enables bi-directional communication between the two applications. This API informs Otter Docs about the currently active page in the host application. This can be useful to show relevant documentation articles to the user.
+
 Here is an overview of all events:
 
 | Event    | Type                   | Description                                                    |
@@ -168,23 +172,7 @@ docker build . -t otter-docs
 docker run -p 8080:8080 -it --env-file ./.env --rm otter-docs
 ```
 
-## Context-aware Integration
-
-Otter Docs can be deployed as a context-aware documentaion, living in a sidebar of another application (called "host application"). The Event API enables bi-directional communication between the two applications. This API informs Otter Docs about the currently active page in the host application. This can be useful to show relevant documentation articles to the user.
-
-![Otter Docs Integration](./integration.drawio.png)
-
-### Path Binding
-
-Path bindings between the host application and Otter Docs can be defined in a file called `__bindings.json` living in the project root of the content repository.
-
-```json 
-{
-  "/path-in-host-app": "/docs-path"
-}
-```
-
-## Configuration
+## Environment variables
 
 The following environment varaibles are available to configure Otter-Docs server.
 
