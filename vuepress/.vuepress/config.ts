@@ -1,4 +1,3 @@
-import { resolve } from 'path'
 import { defaultTheme, defineUserConfig } from 'vuepress'
 import { registerMermaidPlugin } from '../mermaid/plugin'
 
