@@ -7,11 +7,11 @@ ingress:
   annotations:
     kubernetes.io/tls-acme: "true"
   hosts:
-    - host: docs.indigo.tribbles.cloud
+    - host: docs.otter.com
       paths:
         - path: /
           pathType: Prefix
   tls:
    - secretName: otter-docs-tls
      hosts:
-       - docs.indigo.tribbles.cloud
+       - docs.otter.com
