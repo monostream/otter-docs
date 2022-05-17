@@ -1,0 +1,17 @@
+git:
+  url: "https://github.com/monostream/otter-docs-example.git"
+
+ingress:
+  enabled: true
+  ingressClassName: "nginx"
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: docs.gitlab.tribbles.cloud
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+   - secretName: otter-docs-tls
+     hosts:
+       - docs.gitlab.tribbles.cloud
