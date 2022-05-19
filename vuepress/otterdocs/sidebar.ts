@@ -13,7 +13,7 @@ export const getNavbar = () => {
   for (const entry of entries) {
     const stat = statSync(join(contentPath, entry))
 
-    if (stat.isDirectory() || extname(entry).toLowerCase() === '.md') {
+    if (stat.isDirectory()) {
       if (entry.startsWith('.')) {
         continue
       }
