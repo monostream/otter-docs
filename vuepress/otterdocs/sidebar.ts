@@ -6,25 +6,6 @@ const contentPath = join(__dirname, '..', contentDir)
 
 const basePath = join('/', contentDir)
 
-export const getNavbar = () => {
-  const entries = readdirSync(contentPath)
-  const result = []
-
-  for (const entry of entries) {
-    const stat = statSync(join(contentPath, entry))
-
-    if (stat.isDirectory()) {
-      if (entry.startsWith('.')) {
-        continue
-      }
-
-      result.push(join(basePath, entry, '/'))
-    }
-  }
-
-  return result
-}
-
 export const getSidebar = () => {
   const entries = readdirSync(contentPath)
   const result: Record<string, string[]> = {}
@@ -46,6 +27,15 @@ export const getSidebar = () => {
       if (extname(subEntry).toLowerCase() === '.md') {
         result[key].push(join(basePath, entry, subEntry))
       }
+    }
+
+    // Sort in ascending ASCII order
+    result[key].sort()
+    const readmeIndex = result[key].findIndex(e => e.toLowerCase().endsWith('readme.md'))
+
+    if (readmeIndex != undefined) {
+      const readme = result[key].splice(readmeIndex, 1)
+      result[key].unshift(readme[0])
     }
   }
 

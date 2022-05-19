@@ -67,7 +67,7 @@ const extendsPage = (config: Config) => {
       if (config.getStartedLink) {
         page.frontmatter.actions = [{
           text: 'Get Started',
-          link: '/docs/diagrams/',
+          link: config.getStartedLink,
           type: 'primary'
         }];
       }
