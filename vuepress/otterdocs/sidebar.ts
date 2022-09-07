@@ -1,53 +1,54 @@
 import { readdirSync, statSync } from 'fs'
-import { join, extname } from 'path';
+import { join, extname, basename } from 'path';
+import { SidebarConfig, SidebarGroupCollapsible, SidebarItem } from 'vuepress';
 
 const contentDir = 'docs'
-const contentPath = join(__dirname, '..', contentDir)
-
-const basePath = join('/', contentDir)
-
-export const getNavbar = () => {
-  const entries = readdirSync(contentPath)
-  const result = []
-
-  for (const entry of entries) {
-    const stat = statSync(join(contentPath, entry))
-
-    if (stat.isDirectory() || extname(entry).toLowerCase() === '.md') {
-      if (entry.startsWith('.')) {
-        continue
-      }
-
-      result.push(join(basePath, entry, '/'))
-    }
-  }
-
-  return result
-}
+const basePath = join(__dirname, '..')
 
 export const getSidebar = () => {
-  const entries = readdirSync(contentPath)
-  const result: Record<string, string[]> = {}
+  const sidebar: SidebarConfig = {}
 
-  for (const entry of entries) {
-    const stat = statSync(join(contentPath, entry))
+  readdirSync(join(basePath, contentDir))
+    // Filter out hidden directories and files
+    .filter(entry => !entry.startsWith('.'))
+    // Filter out top-level readme.md
+    .filter(entry => entry.toLowerCase() !== 'readme.md')
+    // Generate sidebar for each top-level directory
+    .forEach(entry => {
+      sidebar[join('/', contentDir, basename(entry, extname(entry)))] = [getSidebarItems(join(contentDir, entry))]
+    })
 
-    if (!stat.isDirectory() || entry.startsWith('.')) {
-      continue
+  return sidebar
+}
+
+export const getSidebarItems = (path: string): (SidebarItem | SidebarGroupCollapsible | string) => {
+  if (extname(path) === '.md') {
+    if (basename(path).toLowerCase() === 'readme.md') {
+      // The readme.md is represented by it's parent directory in the sidebar, so we don't return an item
+      return undefined
     }
 
-    const key = join(basePath, entry, '/')
-
-    result[key] = []
-
-    const subEntries = readdirSync(join(contentPath, entry))
-
-    for (const subEntry of subEntries) {
-      if (extname(subEntry).toLowerCase() === '.md') {
-        result[key].push(join(basePath, entry, subEntry))
-      }
-    }
+    return join('/', path)
   }
 
-  return result
+  if (!statSync(join(basePath, path)).isDirectory()) {
+    return undefined
+  }
+
+  const children = readdirSync(join(basePath, path))
+    .map(entry => getSidebarItems(join(path, entry)))
+    // Filter out undefined items
+    .filter(entry => !!entry)
+    // Sort in ascending ASCII order
+    .sort()
+
+  return {
+      text: basename(path),
+      link: join('/', path, '/'),
+      children
+    }
+}
+
+const isString = (data: any): data is string =>  {
+  return typeof data === 'string'
 }

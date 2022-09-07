@@ -1,7 +1,10 @@
 import { defaultTheme, defineUserConfig } from 'vuepress'
+import { registerMermaidPlugin } from '../mermaid/plugin'
 
-import { otterDocs } from '../otterdocs/plugin'
-import { getNavbar, getSidebar } from '../otterdocs/sidebar'
+import { registerOtterDocsPlugin } from '../otterdocs/plugin'
+import { getSidebar } from '../otterdocs/sidebar'
+import { getNavigation } from '../otterdocs/navigation'
+
 
 export default defineUserConfig({
   head: [
@@ -12,17 +15,11 @@ export default defineUserConfig({
   theme: defaultTheme({
     contributors: false,
     logo: '/logo.png',
-    navbar: getNavbar(),
+    navbar: getNavigation(),
     sidebar: getSidebar(),
   }),
   plugins: [
-    // TODO: Mermaid plugin in not compatible with current vuepress v2 version
-    // mermaidPlugin({
-    //   theme: "default",
-    //   darkTheme: "dark",
-    //   darkSelector: "html",
-    //   darkClass: "dark"
-    // }),
-    otterDocs()
+    registerOtterDocsPlugin(),
+    registerMermaidPlugin()
   ]
 })
