@@ -12,6 +12,8 @@ The documentation content is written in Markdown and lives in a Git repository. 
 
 Otter Docs is written in Go, TypeScript and builds upon the awesome [VuePress](https://github.com/vuejs/vuepress/) project.
 
+[![Docker Build](https://github.com/monostream/otter-docs/actions/workflows/docker-image.yml/badge.svg)](https://github.com/monostream/otter-docs/actions/workflows/docker-image.yml)
+
 ## Quickstart
 
 ### Deploy to Kubernetes using helm
