@@ -13,15 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Build and push
-      id: gen_tags
-      run: |
-        if [[ $GITHUB_REF == 'refs/tags/'* ]]; then
-          TAGS='["monostream/otter-docs:latest","monostream/otter-docs:'${GITHUB_REF/refs\/tags\//}'"]'
-        else
-          TAGS='["monostream/otter-docs:latest"]'
-        fi
-        echo '::set-output name=tags::'$TAGS
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: monostream/otter-docs
 
     - uses: actions/checkout@v3
     - name: Login to DockerHub
@@ -33,5 +29,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v3
       with:
-        push: true
-        tags: ${{ fromJson(steps.gen_tags.outputs.tags) }}
+        context: .
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
