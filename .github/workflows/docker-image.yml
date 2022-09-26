@@ -18,6 +18,11 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: monostream/otter-docs
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
 
     - uses: actions/checkout@v3
     - name: Login to DockerHub
