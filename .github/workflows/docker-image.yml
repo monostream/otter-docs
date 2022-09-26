@@ -16,12 +16,12 @@ jobs:
     - name: Build and push
       id: gen_tags
       run: |
-      if [[ $GITHUB_REF == 'refs/tags/'* ]]; then
-        TAGS='["monostream/otter-docs:latest","monostream/otter-docs:'${GITHUB_REF/refs\/tags\//}'"]'
-      else
-        TAGS='["monostream/otter-docs:latest"]'
-      fi
-      echo '::set-output name=tags::'$TAGS
+        if [[ $GITHUB_REF == 'refs/tags/'* ]]; then
+          TAGS='["monostream/otter-docs:latest","monostream/otter-docs:'${GITHUB_REF/refs\/tags\//}'"]'
+        else
+          TAGS='["monostream/otter-docs:latest"]'
+        fi
+        echo '::set-output name=tags::'$TAGS
 
     - uses: actions/checkout@v3
     - name: Login to DockerHub
