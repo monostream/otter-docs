@@ -32,7 +32,6 @@ jobs:
 
     - name: Build and push
       uses: docker/build-push-action@v3
-      needs: gen_tags
       with:
         push: true
         tags: ${{ fromJson(steps.gen_tags.outputs.tags) }}
